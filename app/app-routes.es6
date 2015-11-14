@@ -6,7 +6,7 @@
     .config(config);
 
   function config($urlRouterProvider, $stateProvider) {
-    $stateProvider  
+    $stateProvider
       .state('home', {
         url: '/home',
         templateUrl: '/views/home.tpl.html',
