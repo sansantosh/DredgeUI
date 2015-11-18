@@ -1,8 +1,12 @@
 (function () {
   'use strict';
 
+  const INIT = new WeakMap();
+  const SERVICE = new WeakMap();
+  const TIMEOUT = new WeakMap();
+
   class HomeCtrl {
-    constructor() {
+    constructor($timeout, Users) {
       let vm = this;
       vm.ctrlName = 'HomeCtrl';
     }

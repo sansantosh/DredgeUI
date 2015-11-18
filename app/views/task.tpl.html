@@ -1,2 +1,87 @@
-<h2>task</h2>
-<p>{{task.ctrlName}}</p>
+<h3>Task manager</h3>
+
+<div class="task" id="createTask">
+	<div class="container-fluid">
+		<form class="navbar-form" role="search">
+			<div class="form-group">
+				<h4>Create task</h4>
+				<input type="text" class="form-control" placeholder="Task id">
+				<input type="text" class="form-control" placeholder="Task name">
+				<input type="text" class="form-control" placeholder="Task type">
+				<button type="submit" class="btn btn-primary" ng-click="">Add Pipeline</button>
+			</div>
+			<div class="form-group">
+				<h4>Create Pipeline</h4>
+				<input type="text" class="form-control" placeholder="Pipeline id">
+				<input type="text" class="form-control" placeholder="Pipeline name">
+				<input type="text" class="form-control" placeholder="Pipeline type">
+				<select class="form-control">
+					<option>Select Pipeline type</option>
+				</select>
+				<button class="btn btn-pirmary" data-ng-click="task.showComponents()"> Select components</button>
+			</div>
+			<!-- component list available -->
+			<div class="component-list clearfix" ng-if="task.isComponentVisible">
+				<ul data-ng-repeat="(key, value) in task.componentList | groupBy: 'type'">
+					Group name: {{key}}
+					<li ng-repeat="item in value" >
+						<input type="checkbox">
+						<span>{{item.id}}</span>
+					</li>
+				</ul>
+				<ul> Selected Component
+					<li> </li>
+				</ul>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="row">
+	<div class="navbar-form">
+		<span class="form-group">
+			<h5 role="presentation"> &nbsp;</h5>
+			
+		</span>
+
+	</div>
+	
+
+
+	<div ng-dropdown-multiselect="" options="task.example11data" selected-model="task.example11model" extra-settings="task.example11settings" group-by="gender"></div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Create Task</h3>
+				</div>
+				<div class="panel-body">
+					Panel content
+				</div>
+			</div>
+		</div>
+	</div>
+	<style type="text/css">
+		#createTask{
+			background: #cccccc;
+		}
+		.component-list {
+			z-index: 1000;
+			width: 700px;
+			padding: 5px 0;
+			margin: 2px 0 0;
+			list-style: none;
+			font-size: 14px;
+			background-color: #fff;
+			border: 1px solid #ccc;
+			border: 1px solid rgba(0,0,0,.15);
+			border-radius: 4px;
+			-webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+			box-shadow: 0 6px 12px rgba(0,0,0,.175);
+			background-clip: padding-box;
+		}
+		.component-list > ul{
+			float: left;
+			width: 25%;
+		}
+	</style>
