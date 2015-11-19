@@ -5,19 +5,19 @@
     constructor($http) {
 
         let vm = this;
+        
 
         vm.getUsers = function(){
           return $http({
             method: 'GET',
             url: '/Users'
-          })
-          .then(function(response) {
+          }).then(function(response) {
               // this callback will be called asynchronously
               // when the response is available
 
               console.log(response);
               return response;
-            }, function(response) {
+            },function(response) {
               // called asynchronously if an error occurs
               // or server returns response with an error status.
             });

@@ -24,14 +24,19 @@
         promiseObj:  function(Route){
             return 
          },
-
       })
       .state('login', {
         url: '/login',
         templateUrl: '/views/login.tpl.html',
         controller: 'LoginCtrl',
         controllerAs: 'login'
+      })
+      .state('landing', {
+        url: '/landing',
+        templateUrl: '/views/landing.tpl.html',
+        controller: 'LandingCtrl',
+        controllerAs: 'landing'
       });
-    $urlRouterProvider.otherwise('/login');
+    $urlRouterProvider.otherwise('/landing');
   }
 }());

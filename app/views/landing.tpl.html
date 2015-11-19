@@ -1,0 +1,61 @@
+<div id="carousel-wrapper">
+  	<uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+  		<uib-slide ng-repeat="slide in slides" active="slide.active">
+  			<img ng-src="{{slide.image}}" style="margin:auto;">
+  			<div class="carousel-caption">
+		  		<h2>Big Data Simplified</h2>
+		  		<h4>{{slide.text}}</h4>
+			</div>
+  		</uib-slide>
+	</uib-carousel>
+</div>
+<style type="text/css">
+	#carousel-wrapper {
+		border: 5px solid #FFF;
+		height: 410px; 
+		width: 600px; 
+		margin: 20px auto;
+		border-radius: 3px;
+		box-shadow: 5px 1px 10px rgba(1, 0, 0, 0.3);
+	}
+	#carousel-wrapper img {
+		height: 500px;
+		width: 100%;
+		width: 600px;
+		height: 400px;
+
+	}
+	.landing {
+		margin: 0;
+		padding: 0;
+		height: 100%;
+		position: relative;
+	}
+	.landing::after {
+		content: "sdfsdfs";
+		background: url('./images/img1.jpg') no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		opacity: 0.5;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		position: absolute;
+		z-index: -1;   
+	}
+	.carousel-caption {
+	    background: rgba(25, 25, 25, 0.2);
+	    width: 100%;
+	    right: 0;
+	    left: 0;
+	    bottom: 0;
+	    padding: 0 0 46px;
+	}
+	html, body {
+		margin: 0;
+		height: 100%;
+	}
+</style>

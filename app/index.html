@@ -1,57 +1,84 @@
 <!DOCTYPE html>
 <html lang='en' data-ng-app='dredge'>
-  <head>
-    <title>Dredge</title>
-    <meta name='viewport' content='width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes'>
-    <!-- inject:head:js -->
-    <!-- endinject -->
-    <!-- inject:html -->
-    <!-- endinject -->
-    <!-- bower:css -->
-    <!-- endbower -->
-    <!-- inject:css -->
-    <!-- endinject -->
-  </head>
-  <body>
-
-    <div class='navbar navbar-inverse' role='navigation'>
-      <div class='container'>
-        <div class='navbar-header'>
-          <a class='navbar-brand' href='#/'>Dredge</a>
+<head>
+  <title>Dredge</title>
+  <meta name='viewport' content='width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes'>
+  <!-- inject:head:js -->
+  <!-- endinject -->
+  <!-- inject:html -->
+  <!-- endinject -->
+  <!-- bower:css -->
+  <!-- endbower -->
+  <!-- inject:css -->
+  <!-- endinject -->
+</head>
+<body ng-controller="MainCtrl">
+  <div ng-class="curstate">
+    <div ng-if="curstate !== 'login' ">
+      <div ng-if="curstate === 'landing' " class="navbar navbar-inverse">
+        <div class="container">
+          <div class='navbar-header'>
+          <a class='navbar-brand dredge-logo' href='#/' title="logo home">
+            <img src="./images/dredgelogo.jpeg" alt="Dredge logo">
+          </a>
+          </div>
+          <div class='navbar-collapse collapse' collapse='navCollapsed'>
+            <ul class='nav navbar-nav pull-right'>
+              <li data-ui-sref-active='active'>
+                <a data-ui-sref='login'>Sign in</a>
+              </li>
+              <li data-ui-sref-active='active'>
+                <a data-ui-sref='signup'>Create an account</a>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class='navbar-collapse collapse' collapse='navCollapsed'>
-          <ul class='nav navbar-nav'>
-            <li data-ui-sref-active='active'>
-              <a data-ui-sref='home'>Home</a>
-            </li>
-            <li data-ui-sref-active='active'>
-              <a data-ui-sref='task'>Task</a>
-            </li>
-          </ul>
-          <ul class='nav navbar-nav pull-right'>
-            <li data-ui-sref-active='active'>
-              <a data-ui-sref='signIn'>Sign in</a>
-            </li>
-            <li data-ui-sref-active='active'>
-              <a data-ui-sref='signup'>Create an account</a>
-            </li>
-            <li data-ui-sref-active='active'>
-              <a data-ui-sref='LogOut'>Log out</a>
-            </li>
-          </ul>
+      </div>
+
+      <div class='navbar navbar-inverse' role='navigation' ng-if="curstate !== 'landing' ">
+        <div class='container'>
+          <div class='navbar-header'>
+            <a class='navbar-brand dredge-logo' href='#/' title="logo home">
+            <img src="./images/dredgelogo.jpeg" alt="Dredge logo">
+          </a>
+          </div>
+          <div class='navbar-collapse collapse' collapse='navCollapsed'>
+            <ul class='nav navbar-nav'>
+              <li data-ui-sref-active='active'>
+                <a data-ui-sref='home'>Home</a>
+              </li>
+              <li data-ui-sref-active='active'>
+                <a data-ui-sref='task'>Task</a>
+              </li>
+            </ul>
+            <ul class='nav navbar-nav pull-right'>
+              <li data-ui-sref-active='active'>
+                <a data-ui-sref='landing'>Log out</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
 
     <div class='container'>
       <div data-ui-view>
-
       </div>
     </div>
-
-    <!-- bower:js -->
-    <!-- endbower -->
-    <!-- inject:js -->
-    <!-- endinject -->
-  </body>
+  </div>
+  <!-- bower:js -->
+  <!-- endbower -->
+  <!-- inject:js -->
+  <!-- endinject -->
+  <style type="text/css">
+  a.dredge-logo{
+    padding : 0;
+    margin: 0;
+  }
+  body .navbar-inverse {
+    background-color: #080808;
+  }
+  </style>
+  
+</body>
 </html>
