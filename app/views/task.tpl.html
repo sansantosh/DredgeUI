@@ -1,20 +1,22 @@
 <h3>Task manager</h3>
-
-<div class="task" id="createTask">
-	<div class="container-fluid">
-		<form class="navbar-form" role="search">
+<div class="task-wrapper">
+	<div id="createTask" class=" container-fluid">
+		<form class="navbar-form" role="">
 			<div class="form-group">
-				<h4>Create task</h4>
+				<h5>Create task</h5>
 				<input type="text" class="form-control" placeholder="Task id">
 				<input type="text" class="form-control" placeholder="Task name">
 				<input type="text" class="form-control" placeholder="Task type">
 				<button type="submit" class="btn btn-primary" ng-click="">Add Pipeline</button>
 			</div>
+		</form>
+	</div>
+	<div id="pipeline" class="container-fluid">
+		<form  class="navbar-form" role="">
 			<div class="form-group">
-				<h4>Create Pipeline</h4>
+				<h5>Create Pipeline</h5>
 				<input type="text" class="form-control" placeholder="Pipeline id">
 				<input type="text" class="form-control" placeholder="Pipeline name">
-				<input type="text" class="form-control" placeholder="Pipeline type">
 				<select class="form-control">
 					<option>Select Pipeline type</option>
 				</select>
@@ -55,7 +57,7 @@
 	</div>
 </div> -->
 <style type="text/css">
-	#createTask{
+	.container-fluid{
 		background: #cccccc;
 	}
 	.component-list {
@@ -76,5 +78,13 @@
 	.component-list > ul{
 		float: left;
 		width: 25%;
+	}
+	.task-wrapper > div{
+	    border-radius: 2px;
+	    margin-bottom: 20px;
+	    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+	    box-shadow: 0 2px 3px rgba(0,0,0,.5);
+	    border: 1px solid #D4D4D4;
+        padding-bottom: 10px;
 	}
 </style>
