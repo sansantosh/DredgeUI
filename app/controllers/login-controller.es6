@@ -8,7 +8,6 @@
           id : 'john',
           password : 'dredge'
         };
-        console.log('test');
       $scope.isError = false;
       $scope.submit = function(){
 
