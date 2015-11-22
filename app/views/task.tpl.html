@@ -1,13 +1,20 @@
 <h3>Task manager</h3>
 <div class="task-wrapper">
 	<div id="createTask" class=" container-fluid">
-		<form class="navbar-form" role="">
+		<form class="navbar-form" name="task">
 			<div class="form-group">
 				<h5>Create task</h5>
-				<input type="text" class="form-control" placeholder="Task id">
-				<input type="text" class="form-control" placeholder="Task name">
-				<input type="text" class="form-control" placeholder="Task type">
-				<button type="submit" class="btn btn-primary form-control" ng-click="showPipeline()">Add Pipeline</button>
+				<input type="text" ng-model="task.name" required class="form-control" placeholder="Task name">
+				<select required ng-model="task.type" ng-options="task.type_name for task in task.taskTypes" class="form-control">
+					<option value="">--task type--</option>
+				</select>
+				<select ng-model="task.priority" ng-options="priority.id for priority in task.priorityList" class="form-control">
+					<option value="">--priority--</option>
+				</select>
+				<select ng-model="task.status" class="form-control" ng-options="status.label for status in task.statusList">
+					<option value="">--status--</option>
+				</select>
+				<button type="submit" class="btn btn-primary form-control" ng-click="saveTask()">Save</button>
 			</div>
 		</form>
 	</div>
@@ -15,11 +22,18 @@
 		<form  class="navbar-form" role="">
 			<div class="form-group">
 				<h5>Create Pipeline</h5>
-				<input type="text" class="form-control" placeholder="Pipeline id">
-				<input type="text" class="form-control" placeholder="Pipeline name">
-				<select class="form-control">
-					<option>Select Pipeline type</option>
+				<select required ng-model="pipeline.type" ng-options="type.type_name for type in pipeline.componentTypes" class="form-control">
+					<option value="">--component type--</option>
 				</select>
+
+				<select required ng-model="pipeline.abstraction" ng-options="type.type_name for type in pipeline.abstractionTypes" class="form-control">
+					<option value="">-- Abstraction type--</option>
+				</select>
+
+				<select required ng-model="pipeline.mode" ng-options="mode.label for mode in pipeline.modes" class="form-control" class="form-control">
+					<option value=""> --abstraction mode--</option>
+				</select>
+				<input type="text" class="form-control" placeholder="Previous Pipeline Id">
 				<button class="btn btn-primary form-control" data-ng-click="showComponents()"> Select components</button>
 			</div>
 			<!-- component list available -->

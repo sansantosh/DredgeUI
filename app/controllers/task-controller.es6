@@ -2,16 +2,22 @@
   'use strict';
 
   class TaskCtrl {
-    constructor(Users, $scope) {
+    constructor(Users, Task, $scope) {
 
-      let test = Users.getUsers();
-      console.log(Users);
+      let taskPriorityList = [{'id':'P1'},{'id':'P2'},{'id':'P3'},{'id':'P4'},{'id':'P5'},{'id':'Critical'}];
+      let taskStatus = [{'label': 'Y'}, {'label': 'N'}];
+      let pipeLineMode = [{'label' : 'All'}, {'label' :'Steps'}];
+
       $scope.ctrlName = 'TaskCtrl';
+      $scope.task ={};
+      $scope.pipeline = {};
+    
       $scope.selectedComponents = [];
       $scope.isComponentVisible = false;
       $scope.isPipelineVisible = false;
       $scope.componentSelected = false;
       $scope.selectedCompName = "";
+
       $scope.componentList = [
         {id:'comp1',type:'test'},
         {id:'comp1',type:'test'},
@@ -41,13 +47,38 @@
         {id:'comp11', type:'test1'},
         {id:'comp12', type: 'test'}
       ];
+
+      //initialization
+      //initialization
+      //initialization
+      Task.getTaskType().then(function(response){
+        $scope.task.taskTypes = response.data;
+        $scope.task.priorityList = taskPriorityList;
+        $scope.task.statusList = taskStatus;
+      });
+      Task.getComponentType().then(function(response){
+        $scope.pipeline.componentTypes = response.data;
+      });
+      Task.getAbstractionType().then(function(response){
+        $scope.pipeline.abstractionTypes = response.data;
+        $scope.pipeline.modes = pipeLineMode;
+      });
+
+      
       $scope.showComponents = function () {
         $scope.isComponentVisible = !$scope.isComponentVisible;
       };
 
-      $scope.showPipeline = function (){
-        $scope.isPipelineVisible = !$scope.isPipelineVisible;
-        $scope.isComponentVisible = false;
+      $scope.saveTask = function (){
+          // need to remove
+          $scope.isPipelineVisible = !$scope.isPipelineVisible;
+          $scope.isComponentVisible = false;
+        Task.saveTask($scope.task).then(function(response){
+          //$scope.isPipelineVisible = !$scope.isPipelineVisible;
+          //$scope.isComponentVisible = false;
+        });
+         
+        
       };
 
       $scope.selectComp = function(idx, evt){
