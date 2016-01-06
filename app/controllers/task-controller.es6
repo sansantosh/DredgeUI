@@ -8,44 +8,36 @@
       let taskStatus = [{'label': 'Y'}, {'label': 'N'}];
       let pipeLineMode = [{'label' : 'All'}, {'label' :'Steps'}];
 
+      let chunk = function(arr, size) {
+        var newArr = [];
+        for (var i=0; i<arr.length; i+=size) {
+          newArr.push(arr.slice(i, i+size));
+        }
+        return newArr;
+      }
+
       $scope.ctrlName = 'TaskCtrl';
       $scope.task ={};
+      $scope.task.path = "/Users/hgandhi/Desktop/All/DredgeData/"
       $scope.pipeline = {};
+      $scope.numOfPipelines = 1;
+      $scope.taskId = '';
+      $scope.pipeLineId = '';
     
-      $scope.selectedComponents = [];
+      $scope.selectedComponentList = [];
       $scope.isComponentVisible = false;
       $scope.isPipelineVisible = false;
       $scope.componentSelected = false;
       $scope.selectedCompName = "";
+      $scope.isAddParmVisible = false;
+      $scope.newParms = {};
 
-      $scope.componentList = [
-        {id:'comp1',type:'test'},
-        {id:'comp1',type:'test'},
-        {id:'comp1',type:'test'},
-        {id:'comp2', type:'test2'},
-        {id:'comp3', type:'test'}, 
-        {id:'comp4', type:'test1'},
-        {id:'comp5', type:'test'}, 
-        {id:'comp6', type:'test2'}, 
-        {id:'comp2', type:'test2'},
-        {id:'comp3', type:'test'}, 
-        {id:'comp4', type:'test1'},
-        {id:'comp5', type:'test'}, 
-        {id:'comp6', type:'test2'}, 
-        {id:'comp7', type:'test1'}, 
-        {id:'comp8', type:'test2'},
-        {id:'comp9', type:'test1'},
-        {id:'comp10', type:'test2'}, 
-        {id:'comp11', type:'test1'},
-        {id:'comp4', type:'test1'},
-        {id:'comp5', type:'test'}, 
-        {id:'comp6', type:'test2'}, 
-        {id:'comp7', type:'test1'}, 
-        {id:'comp8', type:'test2'},
-        {id:'comp9', type:'test1'},
-        {id:'comp10', type:'test2'}, 
-        {id:'comp11', type:'test1'},
-        {id:'comp12', type: 'test'}
+      $scope.clist = [
+        {name:'comp1',type:'test'},
+        {name:'comp2',type:'test'},
+        {name:'comp3',type:'test'},
+        {name:'comp4', type:'test'}, 
+        {name:'comp5', type:'test1'}
       ];
 
       //initialization
@@ -64,21 +56,35 @@
         $scope.pipeline.modes = pipeLineMode;
       });
 
-      
-      $scope.showComponents = function () {
+      $scope.getComponentList = function(){
+
+        let id = $scope.pipeline.type.dredge_component_type_id;
+        Task.getComponentList(id).then(function(response){
+          $scope.componentList =  chunk(response.data, 3);
+        });
+      };
+
+      $scope.savePipeline = function () {
+        let obj = $scope.pipeline;
+          obj.parentTaskId = $scope.taskId;
+        Task.savePipeLine(obj, $scope.numOfPipelines).then(function(response){
+          $scope.pipeLineId = response.data.split(": ").pop() * 1;
+          $scope.numOfPipelines ++;
+        });
+
+
         $scope.isComponentVisible = !$scope.isComponentVisible;
       };
 
       $scope.saveTask = function (){
           // need to remove
+          // $scope.isPipelineVisible = !$scope.isPipelineVisible;
+          // $scope.isComponentVisible = false;
+        Task.saveTask($scope.task).then(function(response){
           $scope.isPipelineVisible = !$scope.isPipelineVisible;
           $scope.isComponentVisible = false;
-        Task.saveTask($scope.task).then(function(response){
-          //$scope.isPipelineVisible = !$scope.isPipelineVisible;
-          //$scope.isComponentVisible = false;
+          $scope.taskId = response.data.split(": ").pop() * 1;
         });
-         
-        
       };
 
       $scope.selectComp = function(idx, evt){
@@ -88,8 +94,13 @@
         //$(evt.target).addClass('selected');
 
         $scope.componentSelected = true;
-        $scope.selectedCompName = this.item.id;
-        $scope.selectedCompEl = $(evt.target);
+        $scope.selectedComponent = this.item;
+
+        Task.getComponentParm(this.item).then(function(response){
+
+            $scope.componentParms = response.data
+        });
+
       };
 
       $scope.cancleSelection = function(evt){
@@ -97,8 +108,35 @@
       };
 
       $scope.addComponent = function(evt){
-        $scope.selectedCompEl.addClass('added');
-        $scope.reset(evt.target);
+
+        let componentIndex = $scope.selectedComponentList.length + 1;
+        let taskId = $scope.taskId;
+        let pipelineId = $scope.pipeLineId;
+        let componentList = angular.copy($scope.componentParms);
+
+        // to be removed 
+         _.each(componentList, function(obj, idx){
+
+            if(obj.dredge_component_parameter_id){
+              obj.fk_dredge_component_parameter_id = obj.dredge_component_parameter_id;
+            }
+            else{
+              obj.fk_dredge_component_parameter_id = -99;
+            }
+            //from above
+            obj.task_pipeline_id = pipelineId;
+            //from above
+            obj.task_pipeline_component_id = componentIndex;
+            // index
+            obj.task_pipeline_component_parameter_id = idx + 1;
+         });
+
+        Task.saveComponent(componentIndex, taskId, pipelineId, $scope.selectedComponent, componentList).then(function(response){
+          $scope.selectedComponent.selected = "added";
+          $scope.reset(evt.target);
+          $scope.selectedComponent.id = response.data.split(": ").pop() * 1;
+          $scope.selectedComponentList.push($scope.selectedComponent);
+        });
       };
 
       $scope.reset = function(el){
@@ -116,6 +154,41 @@
         $scope.selectedCompEl.removeClass('added');
         $scope.reset(evt.target);
       };
+
+      $scope.showAddParms = function(){
+          $scope.isAddParmVisible = true;
+      };
+
+      $scope.addParms = function(){
+        $scope.newParms.id = -99;
+        $scope.isAddParmVisible = false;
+        $scope.componentParms.push(angular.copy($scope.newParms));
+        $scope.newParms = {};
+      };
+
+      $scope.cancelAddParms = function(){
+        $scope.isAddParmVisible = false;
+        
+      };
+
+      $scope.sortableOptions = {
+   
+           stop: function(e, ui) {
+            // this callback has the changed model
+
+            let newList = $scope.newComponentList.map(function(i){
+              return {
+                idx : i.idx,
+                id : i.id
+              }
+            });
+
+            //call service to update 
+
+            console.log(newList);
+          }
+      };
+
     }
   }
 

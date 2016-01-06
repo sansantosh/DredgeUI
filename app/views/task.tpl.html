@@ -1,5 +1,10 @@
 <h3>Task manager</h3>
 <div class="task-wrapper">
+
+	<!-- *********** Create Task  ***********/ -->
+	<!-- *********** Create Task  ***********/ -->
+	<!-- *********** Create Task  ***********/ -->
+
 	<div id="createTask" class=" container-fluid">
 		<form class="navbar-form" name="task">
 			<div class="form-group">
@@ -14,15 +19,28 @@
 				<select ng-model="task.status" class="form-control" ng-options="status.label for status in task.statusList">
 					<option value="">--status--</option>
 				</select>
-				<button type="submit" class="btn btn-primary form-control" ng-click="saveTask()">Save</button>
+				<div class="input-group col-sm-8">
+		          <span class="input-group-addon">path</span>
+		          <input type="text" class="form-control" 
+		          		ng-model="task.path"
+		          		id="inputTaskPath" aria-describedby="inputTaskPath"
+		          		placeholder="/Users/hgandhi/Desktop/All/DredgeData">
+		        </div>
+				<button type="submit" class="btn btn-primary form-control" ng-click="saveTask()">Save task</button>
 			</div>
 		</form>
 	</div>
+
+	<!-- *********** Create Pipeline  ***********/ -->
+	<!-- *********** Create Pipeline  ***********/ -->
+	<!-- *********** Create Pipeline  ***********/ -->
+
+
 	<div id="pipeline" class="container-fluid" ng-show="isPipelineVisible">
 		<form  class="navbar-form" role="">
 			<div class="form-group">
 				<h5>Create Pipeline</h5>
-				<select required ng-model="pipeline.type" ng-options="type.type_name for type in pipeline.componentTypes" class="form-control">
+				<select required ng-model="pipeline.type" ng-options="type.type_name for type in pipeline.componentTypes" class="form-control" ng-change="getComponentList()">
 					<option value="">--component type--</option>
 				</select>
 
@@ -33,107 +51,144 @@
 				<select required ng-model="pipeline.mode" ng-options="mode.label for mode in pipeline.modes" class="form-control" class="form-control">
 					<option value=""> --abstraction mode--</option>
 				</select>
-				<input type="text" class="form-control" placeholder="Previous Pipeline Id">
-				<button class="btn btn-primary form-control" data-ng-click="showComponents()"> Select components</button>
+				<input type="text" ng-model="pipeline.previous" class="form-control" placeholder="Previous Pipeline Id">
+				<button class="btn btn-primary form-control" data-ng-click="savePipeline()"> Save pipeline</button>
 			</div>
-			<!-- component list available -->
-			<div class="component-list clearfix" ng-if="isComponentVisible">
-				<ul data-ng-repeat="(key, value) in componentList | groupBy: 'type'">
-					<h5>Group: {{key}}  <span>{{selectedCompName}}</span></h5>
-					<li ng-repeat="item in value" ng-click="selectComp($index, $event)" >
-						<span>{{item.id}}</span>
-					</li>
-				</ul>
-				<div ng-if="componentSelected" id="addCompDetail" class="container-fluid">
-					<div>
-						<label>Previous</label>
-						<input type="text"  class="form-control" placeholder=""/>
-						<label>Next</label>
-						<input type="text"  class="form-control" placeholder=""/>
+		</form>
+	</div>
+
+	<!-- *********** Create Component  ***********/ -->
+	<!-- *********** Create Component  ***********/ -->
+	<!-- *********** Create Component  ***********/ -->
+
+	<div id="component" class="container-fluid" ng-if="isComponentVisible">
+		<form  class="navbar-form" role="">
+			<div class="component-wrapper">
+				<h5>Create Component</h5>
+				
+				<div class="component-list clearfix">
+					<!-- component header  -->
+					<!-- component header  -->
+					<!-- component header  -->
+					<div class="search-bar text-right">				
+						<button id="add-param" class="btn btn-sm" 
+								ng-click="showAddParms()" 
+								ng-show="componentSelected">Add parameter
+						</button>
+						<div class="right-inner-addon" ng-hide="componentSelected">
+							<i class="fa fa-search"></i>
+							<input type="search" class="form-control input-sm" 
+									placeholder="Search" 
+									ng-model="search.name">
+						</div>
 					</div>
-					<div class="action-btns row clearfix">
-						<span class="pull-left">
-							<button class="btn btn-primary btn-sm" ng-click="deselect($event)"> Deselect</button>
-						</span>
-						<span class="pull-right">
-							<button class="btn btn-primary btn-sm" ng-click="addComponent($event)">add </button>
-							<button class="btn btn-sm" ng-click="cancleSelection($event)">cancel</button>
-						</span>
+					<!-- component body -->
+					<!-- component body -->
+					<!-- component body -->
+
+					<div class="componentList-wrapper" ng-if="!componentSelected">
+						<ul data-ng-repeat="items in componentList" class="clearfix">
+							<li ng-repeat="item in items | filter:search:strict" 
+								ng-click="selectComp($index, $event)" c
+								lass="{{item.selected}}">
+								<span>&nbsp;</span>
+								<span class="">{{item.name}} - {{[item.sub_type_name]}}</span>
+							</li>
+						</ul>
+					</div>
+					<!-- component parameter list -->
+					<!-- component parameter list -->
+					<!-- component parameter list -->
+
+					<div ng-if="componentSelected" id="addCompDetail" class="form-horizontal">
+						<div class="add-parms form-group form-group-sm" ng-show="isAddParmVisible">
+							<input class="form-control" type="text" 
+								ng-model="newParms.key_name" 
+								placeholder="$[key]">
+							<input class="form-control" type="text" 
+								ng-model="newParms.param_value" 
+								placeholder="value">
+							<button class="btn btn-primary btn-sm" 
+								ng-click="addParms()">Ok</button>
+							<button class="btn btn-sm" 
+								ng-click="cancelAddParms()">Cancel</button>
+						</div>
+
+						<div class="col-sm-12 param-list">
+							<div class="col-sm-6" ng-repeat="param in componentParms track by $index" 
+								 class="form-group form-group-sm param-warpper text-right">
+								<label class="col-sm-4 control-label">{{param.param_name}}</label>
+								<div class="col-sm-6">
+									<input type="text"  class="form-control" 
+										ng-model="param.param_value"
+										placeholder="--{{param.param_type}}--"/>
+								</div>
+							</div>
+						</div>
+					<!-- component footer -->
+					<!-- component footer -->
+					<!-- component footer -->
+
+						<div class="action-btns row clearfix col-sm-12">
+							<span class="pull-left">
+								<button class="btn btn-primary btn-sm" ng-click="deselect($event)"> Deselect</button>
+							</span>
+							<span class="pull-right">
+								<button class="btn btn-primary btn-sm" ng-click="addComponent($event)">Save Component </button>
+								<button class="btn btn-sm" ng-click="cancleSelection($event)">cancel</button>
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>
 		</form>
 	</div>
-	<div id="component" class="container-fluid" ng-show="isPipelineVisible">
-		<div class="navbar-form">
-			<h5>New Task Detail </h5>
-			<div class="task-detail-wrapper drag-row" id="componentId">
-				
-				<ul class="tbl-row">
-					<li><span>Component Id </span></li>
-					<li class="">22445</li>
-					<li class="">44434</li>
-					<li class="">55544</li>
-					<li class="">55544</li>
-					<li class="">44556</li>
+</div>
+
+	<!-- *********** New Component list  ***********/ -->
+	<!-- *********** New Component list  ***********/ -->
+	<!-- *********** New Component list  ***********/ -->
+
+<!-- <div id="component" class="container-fluid" ng-show="isPipelineVisible"> -->
+<div id="component" class="container-fluid">
+	<div class="navbar-form">
+		<h5>New Task Detail </h5>
+		<div class="task-detail-wrapper" id="componentId">
+			<div class="drag-row">
+				<header>Components</header>
+				<ul class="tbl-row" ui-sortable="sortableOptions" ng-model="selectedComponentList">
+					<li ng-repeat="item in selectedComponentList" class="item">
+						{{item.name}}
+					</li>
 				</ul>
-				<div class="tbl-wrapper">
-					<table class="drag-row">
-						<thead>
-							<th class="">Component Id</th>
-							<th class="">Name</th>
-							<th class="">Type</th>
-							<th class="">Pipethne Id</th>
-							<th class="">test</th>
-							<th class="">test2</th>
-						</thead>
-						<tbody>
-							<tr class="tbl-row">
-								<td class="">test</td>
-								<td class="">test2</td>
-								<td class="">test</td>
-								<td class="">test2</td>
-								<td class="">test</td>
-								<td class="">test2</td>
-							</tr>
-							<tr class="tbl-row">
-								<td class="">test</td>
-								<td class="">test2</td>
-								<td class="">test</td>
-								<td class="">test2</td>
-								<td class="">test</td>
-								<td class="">test2</td>
-							</tr>
-							<tr class="tbl-row">
-								<td class="">test</td>
-								<td class="">test2</td>
-								<td class="">test</td>
-								<td class="">test2</td>
-								<td class="">test</td>
-								<td class="">test2</td>
-							</tr>
-							<tr class="tbl-row">
-								<td class="">test</td>
-								<td class="">test2</td>
-								<td class="">test</td>
-								<td class="">test2</td>
-								<td class="">test</td>
-								<td class="">test2</td>
-							</tr>
-							<tr class="tbl-row">
-								<td class="">test</td>
-								<td class="">test2</td>
-								<td class="">test</td>
-								<td class="">test2</td>
-								<td class="">test</td>
-								<td class="">test2</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+			</div>
+			<div class="tbl-wrapper">
+				<table class="drag-row">
+					<thead>
+						<th class="">Component name</th>
+						<th class="">Component id</th>
+						<th class="">Created Time</th>
+						<th class="">Last modified</th>
+						<th class="">Subtype Id</th>
+						<th class="">Location</th>
+						<th class="">Selected</th>
+					</thead>
+					<tbody>
+						<tr class="tbl-row" ng-repeat="item in selectedComponentList track by $index">
+							<td class="">{{item.name}}</td>
+							<td class="">{{item.dredge_component_id}}</td>
+							<td class="">{{item.created_time}}</td>
+							<td class="">{{item.modified_time}}</td>
+							<td class="">{{item.dredge_component_sub_type_id}}</td>
+							<td class="">{{item.location}}</td>
+							<td class="">{{item.selected}}</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 
 
@@ -162,6 +217,10 @@
 	.container-fluid{
 		background: #cccccc;
 	}
+	.componentList-wrapper {
+		width: 100%;
+		display: table;
+	}
 	.component-list {
 		padding: 1px;
 		margin: 2px 0 0;
@@ -172,6 +231,8 @@
 		box-shadow: 0 6px 12px rgba(0,0,0,.175);
 		background-clip: padding-box;
 		background: #FBFBFB;
+		border-radius: 3px;
+		margin: 7px;
 	}
 	.component-list h5{
 		background: #000;
@@ -181,50 +242,68 @@
 		border: 1px solid #B7B7B7;
 		font-size: .95em;
 	}
+	.component-list .search-bar{
+		border-bottom: 1px solid #cccccc;
+		margin-bottom: 4px;
+	}
 	.component-list h5 span{
 		font-weight: bold;
 		text-decoration: underline;
 	}
-	.component-list > ul{
-		float: left;
-		width: 33%;
+	.component-list ul{
 		margin: 0 1px;
 		padding: 0;
 		font-weight: bold;
+		width: 100%;
+		display: table-row;
 	}
-	.component-list.selected > ul,
+	.component-list.selected  ul,
 	.component-list.selected  li {
 		display: none;
 	}
-	.component-list.selected > ul.selected,
-	.component-list.selected > ul.selected li.selected{
+	.component-list.selected  ul.selected,
+	.component-list.selected  ul.selected li.selected{
 		width: 100%;
 		display: block; 
 		margin: 0;
 	}
-	.component-list.selected > ul.selected h5 {
-
-	}
-
 	.component-list ul li{
-		border: 1px solid #cccccc;
-		background: #E6E6E6;
-		padding: 2px;
+		padding: 0 12px;
 		list-style: none;
 		margin: 2px 0;
 		font-weight: normal;
+		display: table-cell;
+		width: auto;
+	}
+	.component-list ul li span{
+	    display: block;
+	    padding: 2px;
+	    margin: 4px 2px;
+	}	
+	.component-list ul li span:first-child{
+	    float: left;
+	    border: .15em solid #8C8C8C;
+	    height: 11px;
+	    padding: 6px 5px;
+	    /* line-height: 42px; */
+	    vertical-align: middle;
+	    border-radius: 5px;
+	    margin: 8px 4px 1px;
 	}
 	.component-list ul li.added{
 		background:#2CE06C;
 		font-weight: bold;
 	}
 	.component-list ul li:hover{
-		background: #ffffff;
+		padding-left: 12px;
+		font-weight: bold;
+		border-radius: 2px;
+		cursor: pointer;
 	}
 	.component-list .action-btns{
-		border-top: 1px solid #ccc;
-		margin-top: 10px;
-		padding: 10px 20px 0px;
+		    border-top: 1px solid #ccc;
+    margin-top: 10px;
+    padding: 10px 20px 5px 20px;
 	}
 	.task-wrapper > div{
 		border-radius: 2px;
@@ -241,41 +320,81 @@
 		position: relative;
 	}
 
-	.task-detail-wrapper > ul{
+	.task-detail-wrapper > .drag-row {
 		position: absolute;
 		z-index: 1;
 		background: #cccccc;
 		width : 120px;
 		padding-left: 10px;
 	}
-	.task-detail-wrapper > ul li,
+	.task-detail-wrapper ul li,
 	.task-detail-wrapper table td{
 		padding: 0 5px;
+	    border-bottom: 1px solid #000000;
+    	line-height: 2.2em;
 	}
-	.task-detail-wrapper > ul li:first-child{
-		padding: 0;display: table-cell;
-    	padding: 5px 10px !important;
+	.task-detail-wrapper ul li{
+		cursor: move;
+		background: #d9edf7;
 	}
+
 	.task-detail-wrapper table{
 		width: 100%
 	}
 	.task-detail-wrapper tbody tr:nth-child(odd) {
 		background-color: #ffffff;
 	}
-	.task-detail-wrapper ul li:nth-child(even) {
-		background-color: #ffffff;
-	}
-	.drag-row ul li:first-child,
+
+	.drag-row header,
 	.task-detail-wrapper th{
 		background: #000000;
 		color : #ffffff;
-		padding: 5px;
+		padding: .5em;
 		font-weight: normal;
 	}
+	.drag-row header{
+		font-size: .97em;
+	}
+	.param-list div,
+	.param-list label{
+		padding-right: 0;
+		padding-left: 0;
+	}
+	.param-list label{
+		margin-top : 5px;
+	}
+	.add-parms {
+		    background: #1D1B1B;
+    margin: -4px 0px 0px 0px !important;
+    border: 1px solid #888181;
+    width: 100%
+	}
+
+	.add-parms button{
+		margin-right: 10px;
+	}
+
+	.add-parms label{
+		font-weight: normal;
+		margin-top: 3px;
+	}
+	.param-warpper {
+		padding-left: 5px;
+	}
+
+	#component .component-wrapper{
+		width: 100%;
+	}
+
 	#addCompDetail {
 		background: none;
-		padding: 10px;
 		clear: both;
+	}
+	#add-param{
+		margin : 5px;
+	}
+	#inputTaskPath{
+		margin: 0;
 	}
 
 

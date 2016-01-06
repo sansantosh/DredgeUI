@@ -11,6 +11,7 @@
       'ngAria',
       'ui.router',
       'ui.bootstrap',
+      'ui.sortable',
       'ui.bootstrap.tpls',
       'angularjs-dropdown-multiselect',
       'angular.filter'
